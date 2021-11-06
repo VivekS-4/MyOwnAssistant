@@ -5,6 +5,7 @@ import wikipedia
 import speech_recognition as sr
 import pyttsx3 as p
 import webbrowser as wb
+import pyautogui
 
 engine = p.init()
 
@@ -56,6 +57,17 @@ def greet():
     say("How may I help you today?")
 
 
+def ss():
+    img = pyautogui.screenshot()
+    img.save("E:/ss.png")
+
+
+def sngs():
+    song_dir = "C:/Users/HP/Music"
+    songs = os.listdir(song_dir)
+    os.startfile(os.path.join(song_dir, songs[45]))
+
+
 def tc():
     r = sr.Recognizer()
     # source: sr.Microphone
@@ -77,16 +89,20 @@ if __name__ == "__main__":
     greet()
     while True:
         qry = tc().lower()
+
         if "time" in qry:
             time()
+
         elif "date" in qry:
             date()
+
         elif "wikipedia" in qry:
             say("What should I Search?")
             search = tc().lower()
             qry = qry.replace("wikipedia", search)
             result = wikipedia.summary(qry, sentences=2)
             say(result)
+
         elif "email" in qry:
             try:
                 say("What would be the content of the Email?")
@@ -99,16 +115,40 @@ if __name__ == "__main__":
                 say("Unable to send the Email because of:")
                 say(E1)
                 print(E1)
+
+        # elif "songs" or "play" in qry:
+        #     sngs()
+
         elif "chrome" in qry:
             say("What Should I search?")
             path = "C:/Program Files/Google/Chrome/Application/chrome.exe %s"
             search = tc().lower()
             wb.get(path).open_new_tab(search + ".com")
-        elif "logout" in qry:
-            os.system("shutdown -l")
-        elif "shutdown" in qry:
-            os.system("shutdown /s /t 1")
-        elif "restart" in qry:
-            os.system("shutdown -r /t 1")
+
+        elif "remember" in qry:
+            say("What should i remember?")
+            data = tc()
+            rm = open("data.txt", "w")
+            rm.write(data)
+            rm.close()
+
+        elif "know anything" in qry:
+            say("Lemme Check!")
+            msg = open("data.txt", "r")
+            say("You said to remember that")
+            say(msg.read())
+            print(msg.read())
+            msg.close()
+
+        elif "screenshot" in qry:
+            ss()
+            say("Screenshot saved at the location")
+
         elif "offline" in qry:
+            engine.setProperty('rate', 250)
+            hr = datetime.datetime.now().hour
+            if 4 < hr < 20:
+                say("Have a Nice Day ahead, Sir!")
+            else:
+                say("Good Night Sir.")
             quit()
