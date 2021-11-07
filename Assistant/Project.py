@@ -1,3 +1,4 @@
+import pyjokes
 import datetime
 import os
 import smtplib
@@ -6,6 +7,8 @@ import speech_recognition as sr
 import pyttsx3 as p
 import webbrowser as wb
 import pyautogui
+
+import psutil
 
 engine = p.init()
 
@@ -85,6 +88,23 @@ def tc():
     return query.lower()
 
 
+def cpu():
+    usg = str(psutil.cpu_percent())
+    say(usg)
+
+
+def jokes():
+    jk = pyjokes.get_joke()
+    say(jk)
+    print(jk)
+
+
+def btry():
+    prcnt = psutil.sensors_battery()
+    print(prcnt)
+    say(prcnt[0])
+
+
 if __name__ == "__main__":
     greet()
     while True:
@@ -143,6 +163,26 @@ if __name__ == "__main__":
         elif "screenshot" in qry:
             ss()
             say("Screenshot saved at the location")
+
+        elif "usage" in qry:
+            say("CPU usage is at:")
+            cpu()
+
+        elif "battery" in qry:
+            say("Battery is at:")
+            btry()
+            say("Percent")
+
+        elif "joke" in qry:
+            jokes()
+            """if "laughter" or "laugh" or "chuck" or "funny" in qry:
+                jokes("chuck", "en")
+            elif "neutral" in qry:
+                jokes("neutral", "en")
+            elif "twister" in qry:
+                jokes("twister", "en")
+            else:
+                jokes("all", "en")"""
 
         elif "offline" in qry:
             engine.setProperty('rate', 250)
