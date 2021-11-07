@@ -1,6 +1,7 @@
+import webbrowser
+import pywhatkit
 import pyjokes
 import datetime
-import os
 import smtplib
 import wikipedia
 import speech_recognition as sr
@@ -20,9 +21,10 @@ def say(audio):
 
 # Speaking time
 def time():
-    t = datetime.datetime.now().strftime("%H:%M:%S")
+    t = datetime.datetime.now().strftime("%I:%M:%S %p")
     say("Current Time is:")
-    say(t)  # print(t)
+    print(t)
+    say(t)
 
 
 # Speaking Date
@@ -57,18 +59,14 @@ def greet():
         say("Good Evening Sir, Welcome back!")
     else:
         say("Good Night Sir, Welcome back!")
-    say("How may I help you today?")
+    # say("How may I help you today?")
+    engine.setProperty('rate', 300)
+    say("I can Help you with date, time, play a song, wikipedia search, location Search, chrome link open, get a Screenshot, tell you a joke, write down a note for you, CPU usage of the system, and it's battery Percentage.")
 
 
 def ss():
     img = pyautogui.screenshot()
     img.save("E:/ss.png")
-
-
-def sngs():
-    song_dir = "C:/Users/HP/Music"
-    songs = os.listdir(song_dir)
-    os.startfile(os.path.join(song_dir, songs[45]))
 
 
 def tc():
@@ -136,14 +134,18 @@ if __name__ == "__main__":
                 say(E1)
                 print(E1)
 
-        # elif "songs" or "play" in qry:
-        #     sngs()
+        elif "play" in qry:
+            say("What would you like to play?")
+            sng = tc()
+            pywhatkit.playonyt(sng)
+            engine.runAndWait()
 
         elif "chrome" in qry:
             say("What Should I search?")
             path = "C:/Program Files/Google/Chrome/Application/chrome.exe %s"
             search = tc().lower()
             wb.get(path).open_new_tab(search + ".com")
+            engine.runAndWait()
 
         elif "remember" in qry:
             say("What should i remember?")
@@ -151,6 +153,14 @@ if __name__ == "__main__":
             rm = open("data.txt", "w")
             rm.write(data)
             rm.close()
+
+        elif "location" in qry:
+            say("Which place you intend to Locate?")
+            loc = tc()
+            url = "https://www.google.com/maps/place/"+ loc + "/&amp;"
+            say("Here is the Location of" +loc)
+            webbrowser.get().open_new_tab(url)
+            engine.runAndWait()
 
         elif "know anything" in qry:
             say("Lemme Check!")
@@ -175,6 +185,7 @@ if __name__ == "__main__":
 
         elif "joke" in qry:
             jokes()
+            engine.runAndWait()
             """if "laughter" or "laugh" or "chuck" or "funny" in qry:
                 jokes("chuck", "en")
             elif "neutral" in qry:
